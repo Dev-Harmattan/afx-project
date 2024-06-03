@@ -7,11 +7,11 @@ interface LayoutProps {
 
 const Layout = ({ children }: LayoutProps) => {
   return (
-    <div className="flex h-[100vh]">
-      <div className="flex-grow-1 bg-[#182237] p-[20px]">
+    <div className="flex h-screen relative">
+      <div className="flex-grow-0 bg-bgSoft p-[20px] fixed top-0 w-64">
         <Sidebar />
       </div>
-      <div className="flex-grow">
+      <div className="flex-grow ml-64">
         <Navbar />
         {children}
       </div>

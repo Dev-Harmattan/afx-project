@@ -5,7 +5,7 @@ import { MdSearch } from 'react-icons/md';
 
 const Navbar = () => {
   return (
-    <div className="flex justify-between items-center p-4 rounded-sm bg-[#182237] w-full">
+    <div className="flex justify-between items-center p-4 rounded-sm bg-bgSoft w-full">
       <div className="flex items-center gap-3">
         <Image
           src="/total.jpeg"
@@ -14,7 +14,7 @@ const Navbar = () => {
           height="50"
           className="rounded-md"
         />
-        <div className="font-semibold text-[#b7bac1]">Totalenergies</div>
+        <div className="font-semibold text-textSoft">Totalenergies</div>
       </div>
       <div className="flex items-center gap-2 bg-[#2e374a] p-2 rounded-md">
         <MdSearch />

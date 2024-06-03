@@ -7,31 +7,102 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String  @map("user_id")
+  type               String
+  provider           String
+  providerAccountId  String  @map("provider_account_id")
+  refresh_token      String? @db.Text
+  access_token       String? @db.Text
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String? @db.Text
+  session_state      String?
+ 
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+ 
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+ 
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+ 
+  @@map("sessions")
+}
+
 model User {
-  id    String       @id @default(uuid())
-  username   String       @unique
-  password   String
-  first_name String
-  last_name  String
-  role String @default("user")
-  events     Event[]      @relation("EventAttendees")
-  feedbacks  Feedback[]   @relation("FeedbackAttendee")
+  id            String    @id @default(uuid())
+  email         String?   @unique
+  password      String
+  emailVerified DateTime? @map("email_verified")
+  image         String?
+  first_name    String
+  last_name     String
+  role          String?
+  events        EventAttendee[] @relation("UserEvents")
+  feedbacks     Feedback[] @relation("FeedbackAttendee")
+  accounts      Account[]
+  sessions      Session[]
+  created_at    DateTime   @default(now())
+  updated_at    DateTime   @updatedAt
+
+  @@map("users")
+}
+ 
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+ 
+  @@unique([identifier, token])
+  @@map("verificationtokens")
 }
 
 model Event {
-  id   String      @id @default(uuid())
-  event_name String
-  start_date DateTime
-  end_date   DateTime
-  attendees  User[]   @relation("EventAttendees")
-  feedbacks  Feedback[] 
+  id          String      @id @default(uuid())
+  event_name  String
+  start_date  DateTime
+  time        DateTime
+  location    String?
+  room_number String
+  total_seat  Int
+  lunch_time  DateTime
+  description String?
+  attendees   EventAttendee[] @relation("EventAttendees")
+  feedbacks   Feedback[] 
+
+  created_at  DateTime    @default(now())
+  updated_at  DateTime    @default(now()) @updatedAt
 }
 
 model Feedback {
-  id String      @id @default(uuid())
-  event_id    String   
-  user_id     String 
-  comment     String?
-  event       Event    @relation(fields: [event_id], references: [id])
-  attendee    User     @relation("FeedbackAttendee", fields: [user_id], references: [id])
+  id        String      @id @default(uuid())
+  event_id  String
+  user_id   String
+  comment   String?
+  created_at DateTime   @default(now())
+
+  event     Event       @relation(fields: [event_id], references: [id])
+  attendee  User        @relation("FeedbackAttendee", fields: [user_id], references: [id], onDelete: Cascade)
 }
+
+model EventAttendee {
+  id          String  @id @default(cuid())
+  event_id    String
+  user_id     String
+  seat_number Int
+
+  event       Event   @relation("EventAttendees", fields: [event_id], references: [id], onDelete: Cascade)
+  user        User    @relation("UserEvents", fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([event_id, user_id])
+  @@map("event_attendees")
+}
+

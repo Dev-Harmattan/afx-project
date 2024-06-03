@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 import {
   MdDashboard,
@@ -9,6 +10,8 @@ import {
 } from 'react-icons/md';
 import MenuLink from './menuLink';
 import Image from 'next/image';
+import UserProfile from '@/app/components/userProfile';
+import Link from 'next/link';
 
 const menuItems = [
   {
@@ -19,11 +22,11 @@ const menuItems = [
         path: '/dashboard',
         icon: <MdDashboard />,
       },
-      {
-        title: 'Users',
-        path: '/dashboard/users',
-        icon: <MdSupervisedUserCircle />,
-      },
+      // {
+      //   title: 'Users',
+      //   path: '/dashboard/users',
+      //   icon: <MdSupervisedUserCircle />,
+      // },
       {
         title: 'Events',
         path: '/dashboard/events',
@@ -31,43 +34,31 @@ const menuItems = [
       },
     ],
   },
-  {
-    title: 'User',
-    list: [
-      {
-        title: 'Settings',
-        path: '/dashboard/settings',
-        icon: <MdOutlineSettings />,
-      },
-      {
-        title: 'Help',
-        path: '/dashboard/help',
-        icon: <MdHelpCenter />,
-      },
-    ],
-  },
+  // {
+  // title: 'User',
+  // list: [
+  //   {
+  //     title: 'Settings',
+  //     path: '/dashboard/settings',
+  //     icon: <MdOutlineSettings />,
+  //   },
+  //   {
+  //     title: 'Help',
+  //     path: '/dashboard/help',
+  //     icon: <MdHelpCenter />,
+  //   },
+  // ],
+  // },
 ];
 
 const Sidebar = () => {
   return (
-    <div className="sticky top-3 mb-5">
-      <div className="flex items-center gap-5">
-        <Image
-          className="rounded-full object-cover"
-          src="/avatar.webp"
-          alt=""
-          height="50"
-          width="50"
-        />
-        <div className="flex flex-col">
-          <span className="font-medium">Afeez Adeyemo</span>
-          <span className="text-[#b7bac1] text-sm">Admin</span>
-        </div>
-      </div>
+    <div className="sticky top-[40px] h-screen mb-5">
+      <UserProfile />
       <ul className="list-none">
         {menuItems.map((cat) => (
           <li key={cat.title}>
-            <div className="font-medium text-sm text-[#b7bac1] my-3 ">
+            <div className="font-medium text-sm text-textSoft my-3 ">
               {cat.title}
             </div>
             {cat.list.map((item) => (
@@ -81,10 +72,13 @@ const Sidebar = () => {
           </li>
         ))}
       </ul>
-      <button className="p-2 my-1 flex items-center gap-3 cursor-pointer rounded-none bg-none w-full hover:hover:bg-[#2e374a] hover:rounded-[10px]">
+      <Link
+        href={'/api/auth/signout'}
+        className="p-2 my-1 flex items-center gap-3 cursor-pointer rounded-none bg-none w-full hover:hover:bg-[#2e374a] hover:rounded-[10px]"
+      >
         <MdLogout />
         Logout
-      </button>
+      </Link>
     </div>
   );
 };
